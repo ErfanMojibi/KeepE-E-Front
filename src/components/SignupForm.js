@@ -15,8 +15,8 @@ let fieldsState = {};
 fields.forEach(field => fieldsState[field.name] = '');
 
 const messageClass = "flex p-2 mb-2 text-sm rounded-lg font-small"
-const errClass = "text-red-800  bg-red-50 dark:bg-gray-800 dark:text-red-400"
-const successClass = "text-green-800  bg-green-50 dark:bg-gray-800 dark:text-green-400"
+const errClass = " text-red-800  bg-red-50 dark:bg-gray-800 dark:text-red-400"
+const successClass = " text-green-800  bg-green-50 dark:bg-gray-800 dark:text-green-400"
 const resultClass = messageClass + successClass
 export default function Signup() {
     const [msg, setMsg] = useState('')
@@ -24,7 +24,7 @@ export default function Signup() {
         initialValues: fieldsState,
         validationSchema: signUpSchema,
 
-        onSubmit: async (values,{resetForm}) => {
+        onSubmit: async (values, {resetForm}) => {
             const user = {
                 username: values['username'],
                 password: values['password']
@@ -36,24 +36,14 @@ export default function Signup() {
                 );
                 console.log(response)
                 setMsg("Successful Signup");
-                resetForm({values:''})
+                resetForm({values: ''})
             } catch (err) {
-                    if (!err?.response) {
-                        setMsg("No Server Response");
-                    } else if (err.response?.status === 400) {
-                        setMsg("Missing Username or Password");
-                    } else if (err.response?.status === 401) {
-                        setMsg("Unauthorized");
-                    } else if(err.response?.status === 409){
-                        setMsg("User Exists");
-                    } else {
-                        setMsg("Signup Failed");
-                    }
+
+                console.log(err.response.data.error)
+                setMsg(err.response.data.error)
             }
 
         }
-
-
     });
 
 
@@ -85,7 +75,7 @@ export default function Signup() {
                 )
             }
             <FormAction text="Signup"/>
-
+            {msg ? <div className={resultClass}>{msg}</div> : null}
         </form>
     )
 }

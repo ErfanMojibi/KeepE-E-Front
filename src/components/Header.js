@@ -10,9 +10,10 @@ export default function Header({
         <div className="mb-10">
             <div className="flex justify-center">
                 <img
+                    key="logo"
                     alt=""
-                    className="h-50 w-50"
-                    src="../images/icon.png"/>
+                    className="h-auto w-auto"
+                    src={require('../images/icon.png')}/>
             </div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                 {heading}
