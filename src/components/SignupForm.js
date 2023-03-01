@@ -3,95 +3,89 @@ import {signupFields} from "../constants/FormFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
 import axios from "../api/axios";
+import {useFormik} from "formik";
+import {signUpSchema} from "../validation/allValidationSchema";
 
-const SIGNUP_URL = '/users/signup'
-const USER_REGEX = /^\[A-z][A-z0-9-_]{3,23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const SIGNUP_URL = 'users/signup'
+
 
 const fields = signupFields;
 let fieldsState = {};
 
-fields.forEach(field => fieldsState[field.id] = '');
+fields.forEach(field => fieldsState[field.name] = '');
 
+const messageClass = "flex p-2 mb-2 text-sm rounded-lg font-small"
+const errClass = "text-red-800  bg-red-50 dark:bg-gray-800 dark:text-red-400"
+const successClass = "text-green-800  bg-green-50 dark:bg-gray-800 dark:text-green-400"
+const resultClass = messageClass + successClass
 export default function Signup() {
-    const [signupState, setSignupState] = useState(fieldsState);
-    const [errMsg, setErrMsg] = useState("");
+    const [msg, setMsg] = useState('')
+    const formik = useFormik({
+        initialValues: fieldsState,
+        validationSchema: signUpSchema,
 
-
-    const handleChange = (e) => setSignupState({...signupState, [e.target.id]: e.target.value});
-
-    // const handleSubmit=(e)=>{
-    //     e.preventDefault();
-    //     console.log(signupState)
-    //     createAccount()
-    // }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(signupState)
-        const username = signupState['username'];
-        const password = signupState['password'];
-        if(USER_REGEX.test(username)){
-            setErrMsg("Invalid username format");
-            return;
-        }
-        if(PWD_REGEX.test(password)){
-            setErrMsg("Invalid password format");
-            return;
-        }
-
-        try {
-            const response = await axios.post(
-                SIGNUP_URL,
-                JSON.stringify({username, password}),
-                {
-                    headers: {"Content-Type": "application/json"},
-                    withCredentials: true,
-                }
-            );
-            // setSuccess(true);
-            console.log("true");
-            // setUser("");
-            // setPwd("");
-            // setMatchPwd("");
-        } catch (err) {
-            if (!err?.response) {
-                setErrMsg("No Server Response")
-            } else if (err.response?.status === 409) {
-                setErrMsg("Username Taken");
-            } else {
-                setErrMsg("Registration Failed");
+        onSubmit: async (values,{resetForm}) => {
+            const user = {
+                username: values['username'],
+                password: values['password']
             }
-            // errRef.current.focus();
-            console.log("error:", err)
+            try {
+                const response = await axios.post(
+                    SIGNUP_URL,
+                    JSON.stringify(user)
+                );
+                console.log(response)
+                setMsg("Successful Signup");
+                resetForm({values:''})
+            } catch (err) {
+                    if (!err?.response) {
+                        setMsg("No Server Response");
+                    } else if (err.response?.status === 400) {
+                        setMsg("Missing Username or Password");
+                    } else if (err.response?.status === 401) {
+                        setMsg("Unauthorized");
+                    } else if(err.response?.status === 409){
+                        setMsg("User Exists");
+                    } else {
+                        setMsg("Signup Failed");
+                    }
+            }
+
         }
-    };
+
+
+    });
 
 
     return (
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="">
-                {
-                    fields.map(field =>
+        <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
+            {
+                fields.map(field =>
+                    <div>
                         <Input
                             key={field.id}
-                            handleChange={handleChange}
-                            value={signupState[field.id]}
+                            handleChange={formik.handleChange}
+                            value={formik.values[field.name]}
                             labelText={field.labelText}
                             labelFor={field.labelFor}
                             id={field.id}
                             name={field.name}
                             type={field.type}
-                            isRequired={field.isRequired}
                             placeholder={field.placeholder}
                         />
-                    )
-                }
-                <p className="text-red-700">
-                    {errMsg}
-                </p>
-                <FormAction handleSubmit={handleSubmit} text="Signup"/>
+                        {formik.errors[field.name] && formik.touched[field.name] ? (
+                            <div
+                                className={messageClass + errClass}
+                                role="alert">
 
-            </div>
+                                {formik.errors[field.name]}
+                            </div>
+                        ) : null}
+                    </div>
+                )
+            }
+            <FormAction text="Signup"/>
+
         </form>
     )
 }
