@@ -82,6 +82,7 @@ export default function MyNavbar() {
         //TODO request to backend
         localStorage.removeItem("access_token");
         localStorage.removeItem("username");
+        navigate('/')
     }
 
     return (
@@ -89,7 +90,7 @@ export default function MyNavbar() {
             <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
                 <Typography
                     as="a"
-                    href="#"
+                    onClick={()=>navigate('/')}
                     variant="small"
                     className="mr-4 cursor-pointer py-1.5 font-normal"
                 >
