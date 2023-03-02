@@ -1,11 +1,12 @@
 import {useState} from 'react';
 import {loginFields} from "../constants/FormFields";
 import FormAction from "./FormAction";
-import FormExtra from "./FormExtra";
 import Input from "./Input";
 import {useFormik} from "formik";
-import {signUpSchema} from "../validation/allValidationSchema";
+import {loginSchema} from "../validation/allValidationSchema";
 import axios from "../api/axios";
+import {successToast,errToast} from "../toast/customToast";
+import {useNavigate} from "react-router-dom";
 
 const LOGIN_URL = 'users/login'
 
@@ -21,26 +22,29 @@ const successClass = " text-green-800  bg-green-50 dark:bg-gray-800 dark:text-gr
 const resultClass = messageClass + successClass
 
 export default function Login() {
-    const [msg, setMsg] = useState('')
 
-
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: fieldsState,
-        validationSchema: signUpSchema,
-
-        onSubmit: async (values, {resetForm}) => {
+       validationSchema: loginSchema,
+        onSubmit: async (values) => {
+            console.log("marg")
             const user = {
                 username: values['username'],
                 password: values['password']
-            }
+            };
             try {
                 const response = await axios.post(
                     LOGIN_URL,
                     JSON.stringify(user)
                 );
-                console.log(response)
+                console.log(response);
+                localStorage.setItem("access_token", response.data.token);
+                localStorage.setItem("username", user.username);
+                successToast("Successful Login");
+                navigate('/notes')
             } catch (err) {
-                setMsg(err.response.data.error)
+                errToast(err.response.data.error);
             }
 
         }
@@ -51,9 +55,11 @@ export default function Login() {
         <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
             {
                 fields.map(field =>
-                    <div>
+                    <div
+                        key={field.id}
+                    >
                         <Input
-                            key={field.id}
+                            key={field.name}
                             handleChange={formik.handleChange}
                             value={formik.values[field.name]}
                             labelText={field.labelText}
@@ -65,9 +71,9 @@ export default function Login() {
                         />
                         {formik.errors[field.name] && formik.touched[field.name] ? (
                             <div
+                                key={field.name + "error"}
                                 className={messageClass + errClass}
                                 role="alert">
-
                                 {formik.errors[field.name]}
                             </div>
                         ) : null}
@@ -75,7 +81,6 @@ export default function Login() {
                 )
             }
             <FormAction text="Login"/>
-            {msg ? <div className={messageClass + errClass}>{msg}</div> : null}
         </form>
     )
 }

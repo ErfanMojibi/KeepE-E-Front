@@ -5,6 +5,11 @@ import Input from "./Input";
 import axios from "../api/axios";
 import {useFormik} from "formik";
 import {signUpSchema} from "../validation/allValidationSchema";
+import {useNavigate} from "react-router-dom";
+import {successToast, errToast} from '../toast/customToast';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const SIGNUP_URL = 'users/signup'
 
@@ -19,7 +24,7 @@ const errClass = " text-red-800  bg-red-50 dark:bg-gray-800 dark:text-red-400"
 const successClass = " text-green-800  bg-green-50 dark:bg-gray-800 dark:text-green-400"
 const resultClass = messageClass + successClass
 export default function Signup() {
-    const [msg, setMsg] = useState('')
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: fieldsState,
         validationSchema: signUpSchema,
@@ -35,12 +40,12 @@ export default function Signup() {
                     JSON.stringify(user)
                 );
                 console.log(response)
-                setMsg("Successful Signup");
+                successToast("Successful Signup");
                 resetForm({values: ''})
+                navigate('/login')
             } catch (err) {
-
                 console.log(err.response.data.error)
-                setMsg(err.response.data.error)
+                errToast(err.response.data.error)
             }
 
         }
@@ -51,9 +56,9 @@ export default function Signup() {
         <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
             {
                 fields.map(field =>
-                    <div>
+                    <div key={field.id}>
                         <Input
-                            key={field.id}
+                            key={field.name}
                             handleChange={formik.handleChange}
                             value={formik.values[field.name]}
                             labelText={field.labelText}
@@ -64,7 +69,7 @@ export default function Signup() {
                             placeholder={field.placeholder}
                         />
                         {formik.errors[field.name] && formik.touched[field.name] ? (
-                            <div
+                            <div key={field.name+"error"}
                                 className={messageClass + errClass}
                                 role="alert">
 
@@ -75,7 +80,6 @@ export default function Signup() {
                 )
             }
             <FormAction text="Signup"/>
-            {msg ? <div className={resultClass}>{msg}</div> : null}
         </form>
     )
 }
