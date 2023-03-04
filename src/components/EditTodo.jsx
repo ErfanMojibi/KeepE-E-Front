@@ -3,10 +3,23 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import {useRef, useState} from "react";
-import {Avatar, Input, List, ListItem, ListItemText} from "@mui/material";
+import {Avatar, Box, Input, List, ListItem, ListItemText} from "@mui/material";
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
 import {MdDeleteForever} from "react-icons/md";
+import {DatePicker} from '@mui/x-date-pickers';
+
+const BrowserInput = function BrowserInput(props) {
+    const {inputProps, InputProps, ownerState, inputRef, error, ...other} = props;
+
+    return (
+        <Box sx={{display: 'flex', alignItems: 'center'}} ref={InputProps?.ref}>
+            <input type="hidden" ref={inputRef} {...inputProps} {...other} />
+            {InputProps?.endAdornment}
+        </Box>
+    );
+};
+
 
 const afterDeadlineTextStyle = {
     color: "red"
@@ -54,7 +67,7 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
     };
 
     const removeTodoItem = (index) => {
-      setCurrentTasks(currentTasks.filter((item, i) => i !== index));
+        setCurrentTasks(currentTasks.filter((item, i) => i !== index));
     };
 
     return (
@@ -62,23 +75,28 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
             <DialogTitle>{title}</DialogTitle>
             <List>
                 {currentTasks.map((task, index) =>
-                    <ListItem key={index}>
-                        <Avatar
-                            style={Object.assign({cursor: "pointer"}, task.done ? {backgroundColor: "#81C784"} : {})}
-                            onClick={() => toggleDoneStatus(index)}>
-                            {task.done && <DoneIcon/>}
-                        </Avatar>
-                        <ListItemText
-                            sx={{paddingX: "10px"}}
-                            primary={task.text}
-                            secondary={extractDeadlineText(task.deadline)}
-                            secondaryTypographyProps={(deadlineReached(task.deadline) && !task.done) ? {style: afterDeadlineTextStyle} : undefined}/>
+                    <div className="flex flex-row items-center mr-3"
+                         key={index}>
+                        <ListItem>
+                            <Avatar
+                                style={Object.assign({cursor: "pointer"}, task.done ? {backgroundColor: "#81C784"} : {})}
+                                onClick={() => toggleDoneStatus(index)}>
+                                {task.done && <DoneIcon/>}
+                            </Avatar>
+                            <ListItemText
+                                sx={{paddingX: "10px"}}
+                                primary={task.text}
+                                secondary={extractDeadlineText(task.deadline)}
+                                secondaryTypographyProps={(deadlineReached(task.deadline) && !task.done) ? {style: afterDeadlineTextStyle} : undefined}/>
+                        </ListItem>
                         <MdDeleteForever
                             onClick={() => removeTodoItem(index)}
                             className="cursor-pointer float-right"
-                            size='1.3em'/>
-
-                    </ListItem>
+                            size='1.5em'/>
+                        <DatePicker slots={{
+                            textField: BrowserInput,
+                        }}/>
+                    </div>
                 )}
                 {
                     <ListItem>
