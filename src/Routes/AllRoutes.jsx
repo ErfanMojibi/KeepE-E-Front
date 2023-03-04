@@ -4,6 +4,7 @@ import LoginPage from "../pages/Login";
 import SignupPage from "../pages/Signup";
 import NotesPage from "../pages/Notes";
 import NotFound from "../pages/NotFound";
+import TodosPage from "../pages/Todos";
 
 export default function AllRoutes() {
     return (<BrowserRouter>
@@ -12,6 +13,7 @@ export default function AllRoutes() {
             <Route path="/login" element={<LoginPage/>}/>
             <Route path="/signup" element={<SignupPage/>}/>
             <Route path="/notes" element={<NotesPage/>}/>
+            <Route path="/todos" element={<TodosPage/>}/>
             <Route path="*" element={<NotFound/>}/>
         </Routes>
     </BrowserRouter>)
