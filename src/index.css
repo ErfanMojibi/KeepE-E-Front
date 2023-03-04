@@ -25,3 +25,10 @@ code {
     justify-content: space-between;
     white-space: pre-wrap; /* keep white space when render to note */
 }
+
+.note-new {
+    background-color: #C5E1A588;
+    border-radius: 10px;
+    padding: 1rem;
+    min-height: 150px;
+}

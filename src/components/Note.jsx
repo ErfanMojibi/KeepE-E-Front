@@ -15,7 +15,7 @@ const Note = ({id, title, text, createdAt, handleDeleteNote}) => {
             <small className="float-left">{parsedCreatedAt.toLocaleString("en-GB")}</small>
             <MdDeleteForever
                 onClick={() => handleDeleteNote(id)}
-                className="delete-icon cursor-pointer float-right"
+                className="cursor-pointer float-right"
                 size='1.3em'/>
         </div>
     </div>);
