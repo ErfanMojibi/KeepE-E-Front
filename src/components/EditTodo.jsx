@@ -7,7 +7,7 @@ import {Avatar, Box, Input, List, ListItem, ListItemText} from "@mui/material";
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
 import {MdDeleteForever} from "react-icons/md";
-import {DatePicker} from '@mui/x-date-pickers';
+import {DatePicker, DateTimePicker} from '@mui/x-date-pickers';
 import deepCopy from "../util/util";
 
 const BrowserInput = function BrowserInput(props) {
@@ -29,7 +29,7 @@ const afterDeadlineTextStyle = {
 const extractDeadlineText = (deadline) => {
     if (!deadline)
         return deadline;
-    return "Due to " + new Date(deadline).toLocaleString("en-GB");
+    return "Due to " + new Date(deadline).toLocaleDateString("en-GB");
 }
 
 const deadlineReached = (deadline) => {
@@ -71,6 +71,15 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
         setCurrentTasks(currentTasks.filter((item, i) => i !== index));
     };
 
+    const changeDeadline = (index, date) => {
+        setCurrentTasks(currentTasks.map((task, i) => {
+            if (i !== index)
+                return task;
+            task.deadline = date;
+            return task;
+        }));
+    }
+
     return (
         <Dialog PaperProps={{sx: {width: "100%"}}} onClose={() => onCancel()} open={isOpen}>
             <DialogTitle>{title}</DialogTitle>
@@ -96,7 +105,9 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
                             size='1.5em'/>
                         <DatePicker slots={{
                             textField: BrowserInput,
-                        }}/>
+                        }}
+                            onChange={(newDate) => changeDeadline(index, newDate)}
+                        />
                     </div>
                 )}
                 {
