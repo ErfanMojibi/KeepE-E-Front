@@ -2,15 +2,6 @@ import {useEffect, useState} from "react";
 import axios from "../api/axios";
 import TodoItem from "./Todo";
 
-const countTasks = (todo) => {
-    // On empty list just return zero for both of them
-    if (!todo)
-        return {completedTasks: 0, remainingTasks: 0};
-    // Otherwise count items which match completed tasks
-    const completedTasks = todo.filter(item => item.done).length;
-    return {completedTasks: completedTasks, remainingTasks: todo.length - completedTasks};
-};
-
 export default function TodoList() {
     const [todos, setTodos] = useState(null);
 
@@ -36,15 +27,39 @@ export default function TodoList() {
      * @param id {number} The id to delete its todolist
      */
     const onTodoDelete = (id) => {
-        const deleteNote = async () => {
+        const deleteTodo = async () => {
             await axios.delete(`/todos/todo?id=${id}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("access_token")}`
                 }
             });
-            setTodos(setTodos.filter(todo => todo.id !== id));
+            setTodos(todos.filter(todo => todo.id !== id));
         }
-        deleteNote().catch(console.error);
+        deleteTodo().catch(console.error);
+    };
+
+    /**
+     * Must be called when we want to edit a task
+     * @param id {number} The id of the todolist to edit
+     * @param title {string} The title
+     * @param tasks {Array} List of tasks
+     */
+    const onTodoEdit = (id, title, tasks) => {
+        const editTodo = async () => {
+            // TODO: send the request to server
+
+            // Edit locally
+            setTodos(todos.map(todo => {
+                // Ignore not matching todos
+                if (todo.id !== id)
+                    return todo;
+                // Otherwise mutate it
+                todo.title = title;
+                todo.tasks = tasks;
+                return todo;
+            }));
+        };
+        editTodo().catch(console.error);
     };
 
     return (
@@ -53,21 +68,20 @@ export default function TodoList() {
                 todos == null ? // not yet loaded
                     <p>Loading...</p> :
                     todos.map((todo) => {
-                        const {completedTasks, remainingTasks} = countTasks(todo.tasks);
                         return <TodoItem
                             key={todo.id}
                             id={todo.id}
                             title={todo.title}
-                            completedTasks={completedTasks}
-                            remainingTasks={remainingTasks}
+                            tasks={todo.tasks ?? []}
                             createdAt={todo.created_at}
-                            handleDeleteNote={onTodoDelete}
+                            handleDeleteTodo={onTodoDelete}
+                            handleEditTodo={onTodoEdit}
                         />
                     })
             }
             {
                 // If notes are loaded display new TodoItem
-                //notes && ...
+                //todos && <NewTodo/>
             }
         </div>)
 }
