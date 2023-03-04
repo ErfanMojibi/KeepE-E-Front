@@ -6,15 +6,20 @@ import {useRef, useState} from "react";
 import {Avatar, Box, Input, List, ListItem, ListItemText} from "@mui/material";
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
-import {MdDeleteForever} from "react-icons/md";
+
 import {DatePicker, DateTimePicker} from '@mui/x-date-pickers';
 import deepCopy from "../util/util";
+import AlarmOff from '@mui/icons-material/AlarmOff';
+import DeleteForever from '@mui/icons-material/DeleteForever';
 
 const BrowserInput = function BrowserInput(props) {
     const {inputProps, InputProps, ownerState, inputRef, error, ...other} = props;
 
     return (
-        <Box sx={{display: 'flex', alignItems: 'center'}} ref={InputProps?.ref}>
+        <Box sx={{display: 'flex', alignItems: 'bottom',
+            svg: { color: '#000000' },
+            padding: '0'
+        }} ref={InputProps?.ref}>
             <input type="hidden" ref={inputRef} {...inputProps} {...other} />
             {InputProps?.endAdornment}
         </Box>
@@ -80,6 +85,7 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
         }));
     }
 
+
     return (
         <Dialog PaperProps={{sx: {width: "100%"}}} onClose={() => onCancel()} open={isOpen}>
             <DialogTitle>{title}</DialogTitle>
@@ -99,14 +105,20 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
                                 secondary={extractDeadlineText(task.deadline)}
                                 secondaryTypographyProps={(deadlineReached(task.deadline) && !task.done) ? {style: afterDeadlineTextStyle} : undefined}/>
                         </ListItem>
-                        <MdDeleteForever
+
+                        <DeleteForever
                             onClick={() => removeTodoItem(index)}
-                            className="cursor-pointer float-right"
-                            size='1.5em'/>
+                            className="cursor-pointer"
+                            size='1em'/>
+
+                        {task.deadline &&
+                            <AlarmOff className="cursor-pointer" size='1em'
+                                      onClick={() => changeDeadline(index, undefined)}/>
+                        }
                         <DatePicker slots={{
                             textField: BrowserInput,
                         }}
-                            onChange={(newDate) => changeDeadline(index, newDate)}
+                                    onChange={(newDate) => changeDeadline(index, newDate)}
                         />
                     </div>
                 )}
