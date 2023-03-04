@@ -6,6 +6,7 @@ import {useRef, useState} from "react";
 import {Avatar, Input, List, ListItem, ListItemText} from "@mui/material";
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
+import {MdDeleteForever} from "react-icons/md";
 
 const afterDeadlineTextStyle = {
     color: "red"
@@ -32,6 +33,11 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
     const handleSave = () => {
         // TODO: fill this
     };
+    const handleCancel = () => {
+        setCurrentTitle(title);
+        setCurrentTasks(tasks);
+        onCancel();
+    }
     const toggleDoneStatus = (index) => {
         setCurrentTasks(currentTasks.map((task, i) => {
             if (i !== index)
@@ -45,6 +51,10 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
             return;
         setCurrentTasks([...currentTasks, {text: todoText, done: false}]);
         newTodoRef.current.value = "";
+    };
+
+    const removeTodoItem = (index) => {
+      setCurrentTasks(currentTasks.filter((item, i) => i !== index));
     };
 
     return (
@@ -63,6 +73,11 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
                             primary={task.text}
                             secondary={extractDeadlineText(task.deadline)}
                             secondaryTypographyProps={(deadlineReached(task.deadline) && !task.done) ? {style: afterDeadlineTextStyle} : undefined}/>
+                        <MdDeleteForever
+                            onClick={() => removeTodoItem(index)}
+                            className="cursor-pointer float-right"
+                            size='1.3em'/>
+
                     </ListItem>
                 )}
                 {
@@ -82,7 +97,7 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
                 }
             </List>
             <DialogActions>
-                <Button onClick={() => onCancel()}>Cancel</Button>
+                <Button onClick={handleCancel}>Cancel</Button>
                 <Button onClick={handleSave} autoFocus>Save</Button>
             </DialogActions>
         </Dialog>
