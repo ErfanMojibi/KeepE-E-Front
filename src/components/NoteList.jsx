@@ -1,15 +1,42 @@
 import Note from "./Note";
+import {useEffect, useState} from "react";
+import axios from "../api/axios";
 
-export default function NoteList({notes}) {
+export default function NoteList() {
+    const [notes, setNotes] = useState(null);
+
+    // Load notes from backend
+    useEffect(() => {
+        const fetchNotes = async () => {
+            const gotNotes = (await axios.get(
+                "notes/notes", {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("access_token")}`
+                    }
+                }
+            )).data;
+            console.log("notes got:", gotNotes);
+            setNotes(gotNotes);
+        }
+        // Get notes
+        fetchNotes().catch(console.error);
+    }, [])
+
     return (<div className="grid grid-flow-col auto-cols-max mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4">
         {
-            notes.map((note) => <Note
-                key={note.id}
-                id={note.id}
-                title={note.title}
-                text={note.text}
-                date={note.date}
-            />)
+            notes == null ? // not yet loaded
+                <p>Loading...</p> :
+                (
+                    notes.length === 0 ?
+                        <p>You dont have any notes!</p> :
+                        notes.map((note) => <Note
+                            key={note.id}
+                            id={note.id}
+                            title={note.title}
+                            text={note.text}
+                            date={note.date}
+                        />)
+                )
         }
     </div>)
 }
