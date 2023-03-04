@@ -22,7 +22,7 @@ export default function NoteList() {
         fetchNotes().catch(console.error);
     }, [])
 
-    return (<div className="grid grid-flow-col auto-cols-max mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4">
+    return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
         {
             notes == null ? // not yet loaded
                 <p>Loading...</p> :
@@ -34,7 +34,7 @@ export default function NoteList() {
                             id={note.id}
                             title={note.title}
                             text={note.text}
-                            date={note.date}
+                            createdAt={note.created_at}
                         />)
                 )
         }
