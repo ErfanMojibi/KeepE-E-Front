@@ -1,7 +1,7 @@
 import Note from "./Note";
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
-import NewNote from "./NewNote";
+import NewNoteButton from "./NewNoteButton";
 
 export default function NoteList() {
   const [notes, setNotes] = useState(null);
@@ -60,7 +60,7 @@ export default function NoteList() {
       }
       {
         // If notes are loaded display new note
-        notes && <NewNote />
+        notes && <NewNoteButton />
       }
     </div>
   );
