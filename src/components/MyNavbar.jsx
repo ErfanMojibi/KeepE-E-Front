@@ -88,14 +88,30 @@ export default function MyNavbar() {
     return (
         <Navbar className="mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4">
             <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
-                <Typography
-                    as="a"
-                    onClick={()=>navigate('/')}
-                    variant="small"
-                    className="mr-4 cursor-pointer py-1.5 font-normal"
-                >
-                    <span>NotesEE</span>
-                </Typography>
+                <div className="flex flex-row items-center">
+                    <Typography
+                        as="a"
+                        onClick={() => navigate('/')}
+                        variant="h5"
+                        className="mr-4 cursor-pointer py-1.5 text-bold"
+                    >
+                        <span>NotesEE</span>
+                    </Typography>
+                    <Typography
+                        variant="Button"
+                        onClick={() => navigate('/notes')}
+                        className="mr-4 cursor-pointer py-1.5 font-normal"
+                    >
+                        <span>Notes</span>
+                    </Typography>
+                    <Typography
+                        variant="Button"
+                        onClick={() => navigate('/todos')}
+                        className="mr-4 cursor-pointer py-1.5 font-normal"
+                    >
+                        <span>Todos</span>
+                    </Typography>
+                </div>
                 {/* <div className="hidden lg:block">{navList}</div> */}
                 {isLoggedIn ? <div><span className="font-bold m-4">{username}</span><Button onClick={handleLogout}
                                                                                             variant="gradient" size="sm"
