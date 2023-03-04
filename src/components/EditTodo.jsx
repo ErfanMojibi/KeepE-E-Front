@@ -8,6 +8,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
 import {MdDeleteForever} from "react-icons/md";
 import {DatePicker} from '@mui/x-date-pickers';
+import deepCopy from "../util/util";
 
 const BrowserInput = function BrowserInput(props) {
     const {inputProps, InputProps, ownerState, inputRef, error, ...other} = props;
@@ -40,16 +41,16 @@ const deadlineReached = (deadline) => {
 export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
     // Initialize states for editing
     const newTodoRef = useRef(null);
-    const [currentTitle, setCurrentTitle] = useState(title);
-    const [currentTasks, setCurrentTasks] = useState(tasks);
+    const [currentTitle, setCurrentTitle] = useState(deepCopy(title));
+    const [currentTasks, setCurrentTasks] = useState(deepCopy(tasks));
     // Initialize handlers
     const handleSave = () => {
-        // TODO: fill this
+        onSave(id, deepCopy(currentTitle), deepCopy(currentTasks));
     };
     const handleCancel = () => {
-        setCurrentTitle(title);
-        setCurrentTasks(tasks);
         onCancel();
+        setCurrentTitle(deepCopy(title));
+        setCurrentTasks(deepCopy(tasks));
     }
     const toggleDoneStatus = (index) => {
         setCurrentTasks(currentTasks.map((task, i) => {

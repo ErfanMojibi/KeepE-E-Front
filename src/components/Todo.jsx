@@ -4,8 +4,7 @@ import EditTodo from "./EditTodo";
 
 const countTasks = (todo) => {
     // On empty list just return zero for both of them
-    if (!todo)
-        return {completedTasks: 0, remainingTasks: 0};
+    if (!todo) return {completedTasks: 0, remainingTasks: 0};
     // Otherwise count items which match completed tasks
     const completedTasks = todo.filter(item => item.done).length;
     return {completedTasks: completedTasks, remainingTasks: todo.length - completedTasks};
@@ -19,8 +18,9 @@ const TodoItem = ({id, title, tasks, createdAt, handleDeleteTodo, handleEditTodo
     // Make stuff ready for edit dialog
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
-    const handleSave = () => {
+    const handleSave = (id, title, tasks) => {
         setEditDialogOpen(false);
+        handleEditTodo(id, title, tasks);
     }
 
     // Main component
