@@ -20,23 +20,41 @@ export default function NoteList() {
         }
         // Get notes
         fetchNotes().catch(console.error);
-    }, [])
+    }, []);
 
-    return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
-        {
-            notes == null ? // not yet loaded
-                <p>Loading...</p> :
-                (
-                    notes.length === 0 ?
-                        <p>You dont have any notes!</p> :
-                        notes.map((note) => <Note
-                            key={note.id}
-                            id={note.id}
-                            title={note.title}
-                            text={note.text}
-                            createdAt={note.created_at}
-                        />)
-                )
+    /**
+     * Deletes a note by its id.
+     * @param id {number} The id to delete its note
+     */
+    const onNoteDelete = (id) => {
+        const deleteNote = async () => {
+            await axios.delete("/notes/note?id=" + id, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("access_token")}`
+                }
+            });
+            setNotes(notes.filter(note => note.id !== id));
         }
-    </div>)
+        deleteNote().catch(console.error);
+    };
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
+            {
+                notes == null ? // not yet loaded
+                    <p>Loading...</p> :
+                    (
+                        notes.length === 0 ?
+                            <p>You dont have any notes!</p> :
+                            notes.map((note) => <Note
+                                key={note.id}
+                                id={note.id}
+                                title={note.title}
+                                text={note.text}
+                                createdAt={note.created_at}
+                                handleDeleteNote={onNoteDelete}
+                            />)
+                    )
+            }
+        </div>)
 }
