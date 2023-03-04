@@ -2,9 +2,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import {useState} from "react";
-import {Avatar, List, ListItem, ListItemText} from "@mui/material";
+import {useRef, useState} from "react";
+import {Avatar, Input, List, ListItem, ListItemText} from "@mui/material";
 import DoneIcon from '@mui/icons-material/Done';
+import AddIcon from '@mui/icons-material/Add';
 
 const afterDeadlineTextStyle = {
     color: "red"
@@ -24,6 +25,7 @@ const deadlineReached = (deadline) => {
 
 export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
     // Initialize states for editing
+    const newTodoRef = useRef(null);
     const [currentTitle, setCurrentTitle] = useState(title);
     const [currentTasks, setCurrentTasks] = useState(tasks);
     // Initialize handlers
@@ -31,7 +33,6 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
         // TODO: fill this
     };
     const toggleDoneStatus = (index) => {
-        console.log("toggle", index);
         setCurrentTasks(currentTasks.map((task, i) => {
             if (i !== index)
                 return task;
@@ -39,6 +40,12 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
             return task;
         }));
     }
+    const addTodoItem = (todoText) => {
+        if (todoText === "") // no empty todoitem!
+            return;
+        setCurrentTasks([...currentTasks, {text: todoText, done: false}]);
+        newTodoRef.current.value = "";
+    };
 
     return (
         <Dialog PaperProps={{sx: {width: "100%"}}} onClose={() => onCancel()} open={isOpen}>
@@ -58,6 +65,21 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
                             secondaryTypographyProps={(deadlineReached(task.deadline) && !task.done) ? {style: afterDeadlineTextStyle} : undefined}/>
                     </ListItem>
                 )}
+                {
+                    <ListItem>
+                        <Avatar
+                            style={{cursor: "pointer", backgroundColor: "#81C784"}}
+                            onClick={() => {
+                                addTodoItem(newTodoRef.current.value);
+                            }}>
+                            <AddIcon/>
+                        </Avatar>
+                        <Input
+                            style={{width: "100%", marginLeft: "10px"}}
+                            placeholder="New todo"
+                            inputRef={newTodoRef}/>
+                    </ListItem>
+                }
             </List>
             <DialogActions>
                 <Button onClick={() => onCancel()}>Cancel</Button>
