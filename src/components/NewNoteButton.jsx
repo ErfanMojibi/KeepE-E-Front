@@ -1,6 +1,5 @@
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import Container from './Container';
 
 export default function NewNoteButton() {
   return (
