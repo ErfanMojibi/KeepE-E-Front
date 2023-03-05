@@ -7,6 +7,7 @@ import {Avatar, Input, List, ListItem, ListItemText} from "@mui/material";
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
 import {MdDeleteForever} from "react-icons/md";
+import deepCopy from "../util/util";
 
 const afterDeadlineTextStyle = {
     color: "red"
@@ -27,16 +28,16 @@ const deadlineReached = (deadline) => {
 export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
     // Initialize states for editing
     const newTodoRef = useRef(null);
-    const [currentTitle, setCurrentTitle] = useState(title);
-    const [currentTasks, setCurrentTasks] = useState(tasks);
+    const [currentTitle, setCurrentTitle] = useState(deepCopy(title));
+    const [currentTasks, setCurrentTasks] = useState(deepCopy(tasks));
     // Initialize handlers
     const handleSave = () => {
-        // TODO: fill this
+        onSave(id, deepCopy(currentTitle), deepCopy(currentTasks));
     };
     const handleCancel = () => {
-        setCurrentTitle(title);
-        setCurrentTasks(tasks);
         onCancel();
+        setCurrentTitle(deepCopy(title));
+        setCurrentTasks(deepCopy(tasks));
     }
     const toggleDoneStatus = (index) => {
         setCurrentTasks(currentTasks.map((task, i) => {
@@ -54,7 +55,7 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
     };
 
     const removeTodoItem = (index) => {
-      setCurrentTasks(currentTasks.filter((item, i) => i !== index));
+        setCurrentTasks(currentTasks.filter((item, i) => i !== index));
     };
 
     return (

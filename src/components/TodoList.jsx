@@ -46,24 +46,33 @@ export default function TodoList() {
      */
     const onTodoEdit = (id, title, tasks) => {
         const editTodo = async () => {
-            // TODO: send the request to server
-
-            // Edit locally
-            setTodos(todos.map(todo => {
-                // Ignore not matching todos
-                if (todo.id !== id)
+                // Send the request to server
+                await axios.patch("todos/todo", JSON.stringify({
+                        id: id, title: title, tasks: tasks,
+                    }),
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem("access_token")}`
+                        }
+                    })
+                // Edit locally
+                setTodos(todos.map(todo => {
+                    // Ignore not matching todos
+                    if (todo.id !== id)
+                        return todo;
+                    // Otherwise mutate it
+                    todo.title = title;
+                    todo.tasks = tasks;
                     return todo;
-                // Otherwise mutate it
-                todo.title = title;
-                todo.tasks = tasks;
-                return todo;
-            }));
-        };
+                }));
+            }
+        ;
         editTodo().catch(console.error);
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
+        <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
             { // Existing notes
                 todos == null ? // not yet loaded
                     <p>Loading...</p> :
