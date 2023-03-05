@@ -1,9 +1,15 @@
 import {useEffect, useState} from "react";
 import axios from "../api/axios";
 import TodoItem from "./Todo";
+import handleAxiosError from "../api/errors";
+import {useNavigate} from "react-router-dom";
 
 export default function TodoList() {
     const [todos, setTodos] = useState(null);
+    const navigation = useNavigate();
+    const handleAPIError = (err) => {
+        handleAxiosError(err, navigation);
+    }
 
     // Load notes from backend
     useEffect(() => {
@@ -19,7 +25,7 @@ export default function TodoList() {
             setTodos(gotTodos);
         }
         // Get notes
-        fetchNotes().catch(console.error);
+        fetchNotes().catch(handleAPIError);
     }, []);
 
     /**
@@ -35,7 +41,7 @@ export default function TodoList() {
             });
             setTodos(todos.filter(todo => todo.id !== id));
         }
-        deleteTodo().catch(console.error);
+        deleteTodo().catch(handleAPIError);
     };
 
     /**
@@ -67,7 +73,7 @@ export default function TodoList() {
                 }));
             }
         ;
-        editTodo().catch(console.error);
+        editTodo().catch(handleAPIError);
     };
 
     return (

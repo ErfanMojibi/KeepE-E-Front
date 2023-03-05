@@ -2,9 +2,15 @@ import Note from "./Note";
 import {useEffect, useState} from "react";
 import axios from "../api/axios";
 import NewNote from "./NewNote";
+import handleAxiosError from "../api/errors";
+import {useNavigate} from "react-router-dom";
 
 export default function NoteList() {
     const [notes, setNotes] = useState(null);
+    const navigation = useNavigate();
+    const handleAPIError = (err) => {
+        handleAxiosError(err, navigation);
+    }
 
     // Load notes from backend
     useEffect(() => {
@@ -16,11 +22,10 @@ export default function NoteList() {
                     }
                 }
             )).data;
-            console.log("notes got:", gotNotes);
             setNotes(gotNotes);
         }
         // Get notes
-        fetchNotes().catch(console.error);
+        fetchNotes().catch(handleAPIError);
     }, []);
 
     /**
@@ -36,7 +41,7 @@ export default function NoteList() {
             });
             setNotes(notes.filter(note => note.id !== id));
         }
-        deleteNote().catch(console.error);
+        deleteNote().catch(handleAPIError);
     };
 
     return (
