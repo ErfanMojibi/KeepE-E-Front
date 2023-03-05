@@ -1,12 +1,13 @@
-import { Button } from "@material-tailwind/react";
-import {
-  DocumentPlusIcon
-} from "@heroicons/react/24/outline";
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import Container from './Container';
 
 export default function NewNoteButton() {
   return (
-    <Button className="flex items-center gap-2 w-40">
-      <DocumentPlusIcon strokeWidth={2} className="h-6 w-6" /> New Note
-    </Button>
+    <div className="fixed bottom-24 w-10/12 max-w-5xl flex flex-row-reverse">
+      <Fab color="primary" aria-label="add">
+        <AddIcon />
+      </Fab>
+    </div>
   );
 }
