@@ -3,6 +3,7 @@ import axios from "../api/axios";
 import TodoItem from "./Todo";
 import handleAxiosError from "../api/errors";
 import {useNavigate} from "react-router-dom";
+import NewTodo from "./NewTodo";
 
 export default function TodoList() {
     const [todos, setTodos] = useState(null);
@@ -21,7 +22,6 @@ export default function TodoList() {
                     }
                 }
             )).data;
-            console.log(gotTodos);
             setTodos(gotTodos);
         }
         // Get notes
@@ -52,29 +52,45 @@ export default function TodoList() {
      */
     const onTodoEdit = (id, title, tasks) => {
         const editTodo = async () => {
-                // Send the request to server
-                await axios.patch("todos/todo", JSON.stringify({
-                        id: id, title: title, tasks: tasks,
-                    }),
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem("access_token")}`
-                        }
-                    })
-                // Edit locally
-                setTodos(todos.map(todo => {
-                    // Ignore not matching todos
-                    if (todo.id !== id)
-                        return todo;
-                    // Otherwise mutate it
-                    todo.title = title;
-                    todo.tasks = tasks;
+            // Send the request to server
+            await axios.patch("todos/todo", JSON.stringify({
+                    id: id, title: title, tasks: tasks,
+                }),
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("access_token")}`
+                    }
+                })
+            // Edit locally
+            setTodos(todos.map(todo => {
+                // Ignore not matching todos
+                if (todo.id !== id)
                     return todo;
-                }));
-            }
-        ;
+                // Otherwise mutate it
+                todo.title = title;
+                todo.tasks = tasks;
+                return todo;
+            }));
+        };
         editTodo().catch(handleAPIError);
     };
+
+    const addTodoList = (title) => {
+        const addTodo = async () => {
+            // Send the request to server
+            const addResult = (await axios.post("todos/todo",
+                JSON.stringify({
+                    title: title,
+                }),
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("access_token")}`
+                    }
+                })).data;
+            setTodos([...todos, addResult]);
+        };
+        addTodo().catch(handleAPIError);
+    }
 
     return (
         <div
@@ -96,7 +112,7 @@ export default function TodoList() {
             }
             {
                 // If notes are loaded display new TodoItem
-                //todos && <NewTodo/>
+                todos && <NewTodo addTodoList={addTodoList}/>
             }
         </div>)
 }
