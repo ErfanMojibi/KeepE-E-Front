@@ -4,10 +4,11 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import {useRef, useState} from "react";
 import {Avatar, Box, Input, List, ListItem, ListItemText} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
 
-import {DatePicker, DateTimePicker} from '@mui/x-date-pickers';
+import {DatePicker} from '@mui/x-date-pickers';
 import deepCopy from "../util/util";
 import AlarmOff from '@mui/icons-material/AlarmOff';
 import DeleteForever from '@mui/icons-material/DeleteForever';
@@ -16,8 +17,9 @@ const BrowserInput = function BrowserInput(props) {
     const {inputProps, InputProps, ownerState, inputRef, error, ...other} = props;
 
     return (
-        <Box sx={{display: 'flex', alignItems: 'bottom',
-            svg: { color: '#000000' },
+        <Box sx={{
+            display: 'flex',
+            alignItems: 'bottom',
             padding: '0'
         }} ref={InputProps?.ref}>
             <input type="hidden" ref={inputRef} {...inputProps} {...other} />
@@ -106,15 +108,14 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
                                 secondaryTypographyProps={(deadlineReached(task.deadline) && !task.done) ? {style: afterDeadlineTextStyle} : undefined}/>
                         </ListItem>
 
-                        <DeleteForever
-                            onClick={() => removeTodoItem(index)}
-                            className="cursor-pointer"
-                            size='1em'/>
+                        <IconButton onClick={() => removeTodoItem(index)}>
+                            <DeleteForever/>
+                        </IconButton>
 
-                        {task.deadline &&
-                            <AlarmOff className="cursor-pointer" size='1em'
-                                      onClick={() => changeDeadline(index, undefined)}/>
-                        }
+                        <IconButton disabled={!task.deadline} onClick={() => changeDeadline(index, undefined)}>
+                            <AlarmOff/>
+                        </IconButton>
+
                         <DatePicker slots={{
                             textField: BrowserInput,
                         }}
