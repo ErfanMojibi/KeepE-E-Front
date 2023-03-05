@@ -47,11 +47,13 @@ export default function NewTodo({addTodoList}) {
         addTodoList(title);
     }
 
-    return <div className="note-new m-1 cursor-pointer" onClick={() => setIsDialogOpen(true)}>
-        <MdAdd className="m-auto h-full" size='1.3em'/>
+    return <>
+        <div className="note-new m-1 cursor-pointer" onClick={() => setIsDialogOpen(true)}>
+            <MdAdd className="m-auto h-full" size='1.3em'/>
+        </div>
         <AddTodoDialog
             isOpen={isDialogOpen}
             cancelCallback={() => setIsDialogOpen(false)}
             addCallback={addHandler}/>
-    </div>
+    </>
 }
