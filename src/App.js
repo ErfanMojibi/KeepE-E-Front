@@ -1,5 +1,4 @@
-import './App.css';
-
+import "./App.css";
 
 import AllRoutes from "./Routes/AllRoutes";
 import {ToastContainer} from "react-toastify";
@@ -8,7 +7,6 @@ import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
-    console.log("hello marg");
     return (
         <div>
             <div>

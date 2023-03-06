@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import WelcomePage from "../pages/Welcome";
 import LoginPage from "../pages/Login";
 import SignupPage from "../pages/Signup";
@@ -7,14 +7,16 @@ import NotFound from "../pages/NotFound";
 import TodosPage from "../pages/Todos";
 
 export default function AllRoutes() {
-    return (<BrowserRouter>
-        <Routes>
-            <Route path="/" element={<WelcomePage/>}/>
-            <Route path="/login" element={<LoginPage/>}/>
-            <Route path="/signup" element={<SignupPage/>}/>
-            <Route path="/notes" element={<NotesPage/>}/>
-            <Route path="/todos" element={<TodosPage/>}/>
-            <Route path="*" element={<NotFound/>}/>
-        </Routes>
-    </BrowserRouter>)
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/notes" element={<NotesPage />} />
+        <Route path="/todos" element={<TodosPage/>}/>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
