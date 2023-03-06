@@ -2,12 +2,7 @@ import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { useState } from "react";
 import NoteEditor from "./NoteEditor";
 
-const trimString = (str) => {
-  const trimSize = 50;
-  return str.length > trimSize ? str.substring(0, trimSize - 1) + "..." : str;
-};
-
-const Note = ({
+const NoteItem = ({
   id,
   title,
   text,
@@ -16,17 +11,20 @@ const Note = ({
   handleEditNote,
 }) => {
   const parsedCreatedAt = new Date(createdAt);
+  // Make stuff ready for edit dialog
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   const handleSave = (id, title, text) => {
     setEditDialogOpen(false);
     handleEditNote(id, title, text);
   };
 
+  // Main component
   return (
     <>
       <div className="note m-1">
         <div className="font-bold">{title}</div>
-        <div>{trimString(text)}</div>
+        <div>{text}</div>
         <div>
           <small className="float-left">
             {parsedCreatedAt.toLocaleString("en-GB")}
@@ -55,4 +53,4 @@ const Note = ({
   );
 };
 
-export default Note;
+export default NoteItem;
