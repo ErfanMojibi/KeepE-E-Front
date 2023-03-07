@@ -81,7 +81,7 @@ export default function NoteList() {
    * @param title {string} The title
    * @param text {string} The text of the note
    */
-  const onNoteCreate = (title, text = "") => {
+  const onNoteCreate = (title, text) => {
     const addNote = async () => {
       // Send the request to server
       const addResult = (
