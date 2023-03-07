@@ -1,9 +1,12 @@
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Button,
+  TextField,
+} from "@mui/material";
 import { useState } from "react";
-import { TextField } from "@mui/material";
+import "../index.css";
 
 export default function NoteEditor({
   isOpen,
@@ -33,12 +36,30 @@ export default function NoteEditor({
       onClose={onCancel}
       open={isOpen}
     >
-      <DialogTitle>{title}</DialogTitle>
-      <TextField
-        defaultValue={text}
-        fullWidth
-        onChange={(event) => setCurrentText(event.target.value)}
-      />
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          defaultValue={title}
+          type="text"
+          fullWidth
+          variant="standard"
+          onChange={(event) => setCurrentTitle(event.target.value)}
+          className="note-title"
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          defaultValue={text}
+          type="text"
+          fullWidth
+          variant="standard"
+          onChange={(event) => setCurrentText(event.target.value)}
+          multiline
+          minRows={2}
+          maxRows={Infinity}
+        />
+      </DialogContent>
       <DialogActions>
         <Button onClick={handleCancel}>Cancel</Button>
         <Button onClick={handleSave} autoFocus>

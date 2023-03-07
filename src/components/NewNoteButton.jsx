@@ -9,14 +9,17 @@ import { useRef, useState } from "react";
 
 const AddNoteDialog = ({ isOpen, cancelCallback, addCallback }) => {
   const titleTextbox = useRef();
+  const textTextbox = useRef();
   const handleClose = () => {
     titleTextbox.current.value = "";
+    textTextbox.current.value = "";
     cancelCallback();
   };
   const handleAdd = () => {
     if (titleTextbox.current.value === "") return;
-    addCallback(titleTextbox.current.value);
+    addCallback(titleTextbox.current.value, textTextbox.current.value);
     titleTextbox.current.value = "";
+    textTextbox.current.value = "";
   };
 
   return (
@@ -36,6 +39,18 @@ const AddNoteDialog = ({ isOpen, cancelCallback, addCallback }) => {
           variant="standard"
           inputRef={titleTextbox}
         />
+        <TextField
+          autoFocus
+          margin="dense"
+          label="New note text"
+          type="text"
+          fullWidth
+          variant="standard"
+          inputRef={textTextbox}
+          multiline
+          minRows={2}
+          maxRows={Infinity}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
@@ -47,9 +62,9 @@ const AddNoteDialog = ({ isOpen, cancelCallback, addCallback }) => {
 
 export default function NewNoteButton({ handleCreateNote }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const addHandler = (title) => {
+  const addHandler = (title, text) => {
     setIsDialogOpen(false);
-    handleCreateNote(title);
+    handleCreateNote(title, text);
   };
 
   return (

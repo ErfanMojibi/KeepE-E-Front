@@ -32,3 +32,8 @@ code {
     padding: 1rem;
     min-height: 150px;
 }
+
+.note-title input {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
