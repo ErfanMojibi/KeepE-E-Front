@@ -7,13 +7,14 @@ import {Avatar, Box, Input, List, ListItem, ListItemText} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DoneIcon from '@mui/icons-material/Done';
 import AddIcon from '@mui/icons-material/Add';
+import EventIcon from '@mui/icons-material/Event';
 
 import {DatePicker} from '@mui/x-date-pickers';
 import deepCopy from "../util/util";
 import AlarmOff from '@mui/icons-material/AlarmOff';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 
-const BrowserInput = function BrowserInput(props) {
+const DatePickerInsideInput = (props) => {
     const {inputProps, InputProps, ownerState, inputRef, error, ...other} = props;
 
     return (
@@ -23,11 +24,32 @@ const BrowserInput = function BrowserInput(props) {
             padding: '0'
         }} ref={InputProps?.ref}>
             <input type="hidden" ref={inputRef} {...inputProps} {...other} />
-            {InputProps?.endAdornment}
         </Box>
     );
 };
 
+const CustomDatePicker = ({onChange}) => {
+    const [isOpen, setOpen] = useState(false);
+
+    return (
+        <>
+            <DatePicker slots={{
+                textField: DatePickerInsideInput,
+            }}
+                        open={isOpen}
+                        onAccept={(newDate) => {
+                            setOpen(false);
+                            onChange(newDate);
+                        }}
+                        onClose={() => setOpen(false)}
+                        onError={() => setOpen(false)}
+            />
+            <IconButton edge="end" onClick={() => setOpen(true)}>
+                <EventIcon/>
+            </IconButton>
+        </>
+    )
+};
 
 const afterDeadlineTextStyle = {
     color: "red"
@@ -116,11 +138,7 @@ export default function EditTodo({isOpen, id, title, tasks, onSave, onCancel}) {
                             <AlarmOff/>
                         </IconButton>
 
-                        <DatePicker slots={{
-                            textField: BrowserInput,
-                        }}
-                                    onChange={(newDate) => changeDeadline(index, newDate)}
-                        />
+                        <CustomDatePicker onChange={(newDate) => changeDeadline(index, newDate)}/>
                     </div>
                 )}
                 {
