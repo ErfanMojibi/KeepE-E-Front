@@ -4,6 +4,7 @@ import TodoItem from "./Todo";
 import handleAxiosError from "../api/errors";
 import {useNavigate} from "react-router-dom";
 import NewTodo from "./NewTodo";
+import {CircularProgress} from "@mui/material";
 
 export default function TodoList() {
     const [todos, setTodos] = useState(null);
@@ -93,26 +94,33 @@ export default function TodoList() {
     }
 
     return (
-        <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
-            { // Existing notes
-                todos == null ? // not yet loaded
-                    <p>Loading...</p> :
-                    todos.map((todo) => {
-                        return <TodoItem
-                            key={todo.id}
-                            id={todo.id}
-                            title={todo.title}
-                            tasks={todo.tasks ?? []}
-                            createdAt={todo.created_at}
-                            handleDeleteTodo={onTodoDelete}
-                            handleEditTodo={onTodoEdit}
-                        />
-                    })
+        <>
+            {
+                todos ? (
+                    <div
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
+                        {
+                            todos.map((todo) => <TodoItem
+                                key={todo.id}
+                                id={todo.id}
+                                title={todo.title}
+                                tasks={todo.tasks ?? []}
+                                createdAt={todo.created_at}
+                                handleDeleteTodo={onTodoDelete}
+                                handleEditTodo={onTodoEdit}
+                            />)
+                        }
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-6">
+                        <CircularProgress/>
+                        <p>Loading...</p>
+                    </div>
+                )
             }
             {
-                // If notes are loaded display new TodoItem
                 todos && <NewTodo addTodoList={addTodoList}/>
             }
-        </div>)
+        </>
+    )
 }
