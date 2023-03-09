@@ -4,7 +4,8 @@ import {DialogContent, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import {useRef, useState} from "react";
-import {MdAdd} from "react-icons/md";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
 const AddTodoDialog = ({isOpen, cancelCallback, addCallback}) => {
     const titleTextbox = useRef();
@@ -48,8 +49,14 @@ export default function NewTodo({addTodoList}) {
     }
 
     return <>
-        <div className="note-new m-1 cursor-pointer" onClick={() => setIsDialogOpen(true)}>
-            <MdAdd className="m-auto h-full" size='1.3em'/>
+        <div className="fixed bottom-6 right-6 md:bottom-12 md:right-12 xl:bottom-24 xl:right-24 flex flex-row-reverse">
+            <Fab
+                color="primary"
+                aria-label="add"
+                onClick={() => setIsDialogOpen(true)}
+            >
+                <AddIcon/>
+            </Fab>
         </div>
         <AddTodoDialog
             isOpen={isDialogOpen}

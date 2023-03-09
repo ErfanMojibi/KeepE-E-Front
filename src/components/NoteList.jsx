@@ -108,7 +108,7 @@ export default function NoteList() {
             {
                 notes ? (
                     <div
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
+                        className="grid grid-cols-1 pb-24 md:grid-cols-2 lg:grid-cols-4 mx-auto max-w-screen-xl px-4 lg:px-8 lg:py-4">
                         {
                             notes.map((note) => <Note
                                 key={note.id}

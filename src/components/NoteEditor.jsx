@@ -47,6 +47,10 @@ export default function NoteEditor({
                     placeholder="Note title"
                     onChange={(event) => setCurrentTitle(event.target.value)}
                     className="note-title"
+                    autoComplete="none"
+                    InputProps={{
+                        disableUnderline: true,
+                    }}
                 />
                 <TextField
                     autoFocus
@@ -60,6 +64,10 @@ export default function NoteEditor({
                     minRows={2}
                     placeholder="Note body"
                     maxRows={Infinity}
+                    autoComplete="none"
+                    InputProps={{
+                        disableUnderline: true,
+                    }}
                 />
             </DialogContent>
             <DialogActions>
