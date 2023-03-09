@@ -104,7 +104,7 @@ export default function MyNavbar() {
                 {isLoggedIn ? <div className="w-full"><Button onClick={handleLogout}
                                                                                             variant="gradient" size="sm"
                                                                                             className="hidden float-right lg:inline-block">
-                        <span>Logout</span></Button><span className="font-bold float-right mr-4 mt-1">{username}</span></div> :
+                        <span>Logout</span></Button><span className="font-bold float-right mr-4 lg:mt-1">{username}</span></div> :
                     <Button onClick={() => navigate('/login')} variant="gradient" size="sm"
                             className="hidden lg:inline-block">
                         <span>Login / Signup</span>
