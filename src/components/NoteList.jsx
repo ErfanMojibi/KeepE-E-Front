@@ -3,9 +3,15 @@ import {useEffect, useState} from "react";
 import axios from "../api/axios";
 import NewNoteButton from "./NewNoteButton";
 import {CircularProgress} from "@mui/material";
+import handleAxiosError from "../api/errors";
+import {useNavigate} from "react-router-dom";
 
 export default function NoteList() {
     const [notes, setNotes] = useState(null);
+    const navigation = useNavigate();
+    const handleAPIError = (err) => {
+        handleAxiosError(err, navigation);
+    }
 
     // Load notes from backend
     useEffect(() => {
@@ -20,7 +26,7 @@ export default function NoteList() {
             setNotes(gotNotes);
         };
         // Get notes
-        fetchNotes().catch(console.error);
+        fetchNotes().catch(handleAPIError);
     }, []);
 
     /**
@@ -36,7 +42,7 @@ export default function NoteList() {
             });
             setNotes(notes.filter((note) => note.id !== id));
         };
-        deleteNote().catch(console.error);
+        deleteNote().catch(handleAPIError);
     };
 
     /**
@@ -73,7 +79,7 @@ export default function NoteList() {
                 })
             );
         };
-        editNote().catch(console.error);
+        editNote().catch(handleAPIError);
     };
 
     /**
@@ -100,7 +106,7 @@ export default function NoteList() {
             ).data;
             setNotes([...notes, addResult]);
         };
-        addNote().catch(console.error);
+        addNote().catch(handleAPIError);
     };
 
     return (
