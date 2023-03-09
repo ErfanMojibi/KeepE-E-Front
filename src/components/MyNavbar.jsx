@@ -8,17 +8,6 @@ import {
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 
-const pages = [
-  {
-    title: "login",
-    path: "/login",
-  },
-  {
-    title: "signup",
-    path: "/signup",
-  },
-];
-
 export default function MyNavbar() {
   const [openNav, setOpenNav] = useState(false);
 
@@ -112,10 +101,10 @@ export default function MyNavbar() {
                     </Typography>
                 </div>
                 {/* <div className="hidden lg:block">{navList}</div> */}
-                {isLoggedIn ? <div><span className="font-bold m-4">{username}</span><Button onClick={handleLogout}
+                {isLoggedIn ? <div className="w-full"><Button onClick={handleLogout}
                                                                                             variant="gradient" size="sm"
-                                                                                            className="hidden lg:inline-block">
-                        <span>Logout</span></Button></div> :
+                                                                                            className="hidden float-right lg:inline-block">
+                        <span>Logout</span></Button><span className="font-bold float-right mr-4 mt-1">{username}</span></div> :
                     <Button onClick={() => navigate('/login')} variant="gradient" size="sm"
                             className="hidden lg:inline-block">
                         <span>Login / Signup</span>
@@ -123,7 +112,7 @@ export default function MyNavbar() {
 
         <IconButton
           variant="text"
-          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+          className="h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
           ripple={false}
           onClick={() => setOpenNav(!openNav)}
         >
